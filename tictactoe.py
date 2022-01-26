@@ -125,7 +125,7 @@ def minimax(board):
         v = -inf
         move = ()
         for j in range(len(action)):
-            score = minval(result(board, action[j]))
+            score = minval(result(board, action[j]), v)
             if score > v:
                 move = action[j]
                 v = score
@@ -135,7 +135,7 @@ def minimax(board):
         v = inf
         move = ()
         for j in range(len(action)):
-            score = maxval(result(board, action[j]))
+            score = maxval(result(board, action[j]), v)
             if score < v:
                 v = score
                 move = action[j]
@@ -143,24 +143,28 @@ def minimax(board):
                     break
     return move
 
-def maxval(board):
+def maxval(board, alpha):
     if terminal(board):
         return utility(board)
     v = -inf
     action = actions(board)
     for j in range(len(action)):
-        score = max(v, minval(result(board, action[j])))
+        score = max(v, minval(result(board, action[j]), v))
         if score > v:
             v = score
+        if v > alpha:
+            break
     return v
 
-def minval(board):
+def minval(board, alpha):
     if terminal(board):
         return utility(board)
     v = inf
     action = actions(board)
     for j in range(len(action)):
-        score = min(v, maxval(result(board, action[j])))
+        score = min(v, maxval(result(board, action[j]), v))
         if score < v:
             v = score
+        if v < alpha:
+            break
     return v
